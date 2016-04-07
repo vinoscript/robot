@@ -1,5 +1,12 @@
 class Robot
 
+  class RobotAlreadyDeadError < StandardError ; end
+  class UnattackableEnemyError < StandardError ; end
+
+  MAX_WEIGHT = 250
+  FULL_HEALTH = 100
+  BASIC_DAMAGE_AMOUNT = 5
+
   attr_reader :position, :items, :health
 
   attr_accessor :equipped_weapon
@@ -7,7 +14,7 @@ class Robot
   def initialize
     @position = [0, 0]
     @items = []
-    @health = 100
+    @health = FULL_HEALTH
     @equipped_weapon = nil 
   end
 
@@ -28,39 +35,47 @@ class Robot
   end
 
   def pick_up(item)
-    unless items_weight + item.weight > 250
+    unless items_weight + item.weight > MAX_WEIGHT
       self.equipped_weapon = item if item.is_a? Weapon
-      @items << item
+      items << item
     end
   end
 
   def items_weight
-    # @items.reduce(0) { |sum, items| sum += items.weight }
+    # items.reduce(0) { |sum, items| sum += items.weight }
+    # items.inject(0) { |sum, items| sum + items.weight  }
     weight = 0
-    @items.each do |item|
-      weight += item.weight 
-    end
+    items.each { |item| weight += item.weight }
     weight
   end
 
   def wound(amount)
     @health -= amount
-    @health = 0 if @health < 0
+    @health = 0 if health < 0
   end
 
   def heal(amount)
     @health += amount
-    @health = 100 if @health > 100
+    @health = FULL_HEALTH if health > FULL_HEALTH
   end
 
   def attack(enemy)
     # make into ternary
     if equipped_weapon == nil
-      enemy.wound(5)
+      enemy.wound(BASIC_DAMAGE_AMOUNT)
     else
       equipped_weapon.hit(enemy)
     end
   end
 
+  def heal!(amount)
+    raise RobotAlreadyDeadError, "Can't attack a dead robot" if health <= 0 
+    heal(amount)
+  end
+
+  def attack!(enemy)
+    raise UnattackableEnemyError, "Can only attack other robots" unless enemy.is_a? Robot
+    attack(enemy)
+  end
 
 end
