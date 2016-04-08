@@ -67,17 +67,23 @@ class Robot
   def attack(enemy)
     x = position[0]
     y = position[1]
-    one_away_positions = [[x, y+1], [x+1, y], [x, y-1], [x-1, y]]
+    one_away_positions = [[x, y+1], [x+1, y], [x, y-1], [x-1, y], [x, y]]
     two_away_positions = [[x, y+2], [x+2, y], [x, y-2], [x-2, y]]
     one_or_two_away = one_away_positions + two_away_positions
+
+    # i = range
+    # position = [x,y]
+    # position.map {  }
+    # all_pos = []
+    # (1..range) do |i|
+    #   all_pos << [x, y+ i]
+    #   all_pos << [x + i, y]
 
     if equipped_weapon.is_a?(Grenade) && one_or_two_away.include?(enemy.position)
       equipped_weapon.hit(enemy)
       self.equipped_weapon = nil
-    end
-
-    if one_away_positions.include?(enemy.position)
-      equipped_weapon == nil ? enemy.wound(BASIC_DAMAGE) : equipped_weapon.hit(enemy)
+    elsif one_away_positions.include?(enemy.position)  
+      equipped_weapon ? equipped_weapon.hit(enemy) : enemy.wound(BASIC_DAMAGE)
     end
 
   end
