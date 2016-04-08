@@ -35,9 +35,14 @@ class Robot
   end
 
   def pick_up(item)
-    unless items_weight + item.weight > MAX_WEIGHT
-      self.equipped_weapon = item if item.is_a? Weapon
-      items << item
+    if item.is_a?(Weapon)
+      self.equipped_weapon = item
+    elsif item.is_a?(BoxOfBolts)  
+      health > 80 ? items << item : item.feed(self)
+    else
+      unless items_weight + item.weight > MAX_WEIGHT
+        items << item
+      end
     end
   end
 
@@ -62,9 +67,19 @@ class Robot
   def attack(enemy)
     x = position[0]
     y = position[1]
-    if [[x, y+1], [x+1, y], [x, y-1], [x-1, y]].include?(enemy.position)
+    one_away_positions = [[x, y+1], [x+1, y], [x, y-1], [x-1, y]]
+    two_away_positions = [[x, y+2], [x+2, y], [x, y-2], [x-2, y]]
+    one_or_two_away = one_away_positions + two_away_positions
+
+    if equipped_weapon.is_a?(Grenade) && one_or_two_away.include?(enemy.position)
+      equipped_weapon.hit(enemy)
+      self.equipped_weapon = nil
+    end
+
+    if one_away_positions.include?(enemy.position)
       equipped_weapon == nil ? enemy.wound(BASIC_DAMAGE) : equipped_weapon.hit(enemy)
     end
+
   end
 
   def heal!(amount)

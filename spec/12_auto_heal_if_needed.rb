@@ -2,6 +2,8 @@
 # to consume it, then it will automatically feed on the bolts.
 # It should only feed on the bolts if it needs all of the energy from them
 
+require_relative 'spec_helper'
+
 describe Robot do
   describe "#pick_up" do
     before :each do
