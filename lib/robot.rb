@@ -5,7 +5,7 @@ class Robot
 
   MAX_WEIGHT = 250
   FULL_HEALTH = 100
-  BASIC_DAMAGE_AMOUNT = 5
+  BASIC_DAMAGE = 5
 
   attr_reader :position, :items, :health
 
@@ -60,11 +60,10 @@ class Robot
   end
 
   def attack(enemy)
-    # make into ternary
-    if equipped_weapon == nil
-      enemy.wound(BASIC_DAMAGE_AMOUNT)
-    else
-      equipped_weapon.hit(enemy)
+    x = position[0]
+    y = position[1]
+    if [[x, y+1], [x+1, y], [x, y-1], [x-1, y]].include?(enemy.position)
+      equipped_weapon == nil ? enemy.wound(BASIC_DAMAGE) : equipped_weapon.hit(enemy)
     end
   end
 

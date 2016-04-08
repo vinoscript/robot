@@ -18,3 +18,6 @@ safe_require 'weapon'
 safe_require 'box_of_bolts'
 safe_require 'laser'
 safe_require 'plasma_cannon'
+safe_require 'robot_heal_extra'
+safe_require 'robot_attack'
+
