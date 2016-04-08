@@ -6,8 +6,9 @@ class Robot
   MAX_WEIGHT = 250
   FULL_HEALTH = 100
   BASIC_DAMAGE = 5
+  FULL_SHIELD = 50
 
-  attr_reader :position, :items, :health
+  attr_reader :position, :items, :health, :shield_points
 
   attr_accessor :equipped_weapon
 
@@ -16,6 +17,7 @@ class Robot
     @items = []
     @health = FULL_HEALTH
     @equipped_weapon = nil 
+    @shield_points = FULL_SHIELD
   end
 
   def move_left
@@ -55,8 +57,13 @@ class Robot
   end
 
   def wound(amount)
-    @health -= amount
+    damage_to_shield = [shield_points, amount].min 
+    @shield_points -= damage_to_shield
+    damage_to_health = amount - damage_to_shield
+    @health -= damage_to_health
     @health = 0 if health < 0
+
+    # @health = [0, @health - damage_to_health].max
   end
 
   def heal(amount)
