@@ -5,3 +5,13 @@
 
 require_relative 'spec_helper'
 
+# #enemy_nearby?
+describe Robot do
+
+  describe '#nearby_enemies' do
+    it 'returns nearby enemies' do
+      expect(subject.nearby_enemies).to be_empty
+    end
+  end
+
+end

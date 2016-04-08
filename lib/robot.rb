@@ -8,9 +8,11 @@ class Robot
   BASIC_DAMAGE = 5
   FULL_SHIELD = 50
 
-  attr_reader :position, :items, :health, :shield_points
+  @@robots = []
 
-  attr_accessor :equipped_weapon
+  attr_reader :position, :items, :health
+
+  attr_accessor :equipped_weapon, :shield_points
 
   def initialize
     @position = [0, 0]
@@ -18,6 +20,27 @@ class Robot
     @health = FULL_HEALTH
     @equipped_weapon = nil 
     @shield_points = FULL_SHIELD
+    @@robots << self
+  end
+
+  def self.robots
+    @@robots
+  end 
+
+  def self.robots_in_position(x, y)
+    @@robots.select { |robot| robot.position == [x, y] }
+  end
+
+  #check if there is another robot directly next to itself - not sure if this method is correct??
+  def nearby_enemies
+    x = position[0]
+    y = position[1]
+    one_away_positions = [[x, y+1], [x+1, y], [x, y-1], [x-1, y], [x, y]]
+    @@robots.select do |robot| 
+      one_away_positions.include?(robot.position) && robot != self
+    end.map do |robot|
+      robot.position
+    end
   end
 
   def move_left

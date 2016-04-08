@@ -21,4 +21,6 @@ safe_require 'plasma_cannon'
 safe_require 'robot_heal_extra'
 safe_require 'robot_attack'
 safe_require 'grenade'
+safe_require 'battery'
+
 

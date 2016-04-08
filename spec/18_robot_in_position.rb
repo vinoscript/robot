@@ -5,3 +5,12 @@
 
 require_relative "spec_helper"
 
+describe Robot do
+  
+  describe ".robots" do
+    it "should return an array of all robots" do
+      
+    end
+  end
+
+end
